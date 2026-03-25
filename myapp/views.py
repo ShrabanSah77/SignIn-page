@@ -20,9 +20,13 @@ def login_view(request):
 
 def register_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        if not username or not email or not password:
+            messages.error(request, 'All fields are required')
+            return redirect('register')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
